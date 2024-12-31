@@ -1,23 +1,31 @@
 from flask import Flask, render_template, request, redirect, url_for, make_response, jsonify
 from weasyprint import HTML
 import os, json
-from urllib.parse import urlparse
+import base64
 
 app = Flask(__name__)
 app.jinja_env.globals.update(enumerate=enumerate)
 
+def get_base64_asset(file_path):
+    try:
+        with open(file_path, 'rb') as f:
+            return base64.b64encode(f.read()).decode('utf-8')
+    except Exception as e:
+        print(f"Error reading file {file_path}: {str(e)}")
+        return None
+
 # Add this custom URL fetcher function after your imports
-def custom_fetcher(url):
-    parsed = urlparse(url)
-    if parsed.netloc == 'postretowebapp.onrender.com':
-        # Convert the URL path to a local file path
-        local_path = os.path.join(
-            app.static_folder, 
-            parsed.path.lstrip('/static/')
-        )
-        if os.path.isfile(local_path):
-            with open(local_path, 'rb') as f:
-                return {'string': f.read()}
+# def custom_fetcher(url):
+#     parsed = urlparse(url)
+#     if parsed.netloc == 'postretowebapp.onrender.com':
+#         # Convert the URL path to a local file path
+#         local_path = os.path.join(
+#             app.static_folder, 
+#             parsed.path.lstrip('/static/')
+#         )
+#         if os.path.isfile(local_path):
+#             with open(local_path, 'rb') as f:
+#                 return {'string': f.read()}
 
 # Ruta para servir el archivo productos.json
 @app.route("/productos")
@@ -104,13 +112,29 @@ def recibo():
         total = sum(p["cantidad"] * p["precio_unitario"] for p in productos)
         restante = total - anticipo
 
-        # Renderizar el HTML del recibo
-        recibo_html = render_template("recibo.html", cliente=cliente, productos=productos, total=total, anticipo=anticipo, restante=restante, fecha=fecha)
+        # Get base64 encoded assets
+        static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'css')
+        script_font = get_base64_asset(os.path.join(static_dir, 'Script.ttf'))
+        dreaming_font = get_base64_asset(os.path.join(static_dir, 'dreaming-script.otf'))
+        logo = get_base64_asset(os.path.join(static_dir, 'logo_grande.png'))
         
-        # Redirigir a la ruta de descarga del PDF, pasando los datos necesarios
+        # Render the HTML of the recibo with the encoded assets
+        recibo_html = render_template(
+            "recibo.html",
+            cliente=cliente,
+            productos=productos,
+            total=total,
+            anticipo=anticipo,
+            restante=restante,
+            fecha=fecha,
+            script_font=script_font,
+            dreaming_font=dreaming_font,
+            logo=logo
+        )
+        
         return download(cliente, fecha, recibo_html)
 
-    return render_template("formulario.html")  # Formulario para capturar datos del recibo
+    return render_template("formulario.html")
 
 # Ruta para descargar el recibo como PDF
 @app.route("/download", methods=["POST"])
@@ -118,7 +142,6 @@ def download(cliente, fecha, html_content):
     try:
         nombre_archivo = f"Recibo entrega - {cliente} - {fecha}.pdf"
         
-        # Create the PDF with the correct base URL
         pdf = HTML(
             string=html_content,
             base_url=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
@@ -130,7 +153,7 @@ def download(cliente, fecha, html_content):
 
         return response
     except Exception as e:
-        print(f"PDF Generation Error: {str(e)}")  # For debugging
+        print(f"PDF Generation Error: {str(e)}")
         return str(e), 500
 
 if __name__ == "__main__":
