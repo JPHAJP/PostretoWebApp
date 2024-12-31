@@ -8,7 +8,7 @@ app.jinja_env.globals.update(enumerate=enumerate)
 # Ruta para servir el archivo productos.json
 @app.route("/productos")
 def productos():
-    with open("app/productos.json", "r") as f:
+    with open("productos.json", "r") as f:
         productos = json.load(f)
     return jsonify(productos)
 
@@ -20,7 +20,7 @@ def home():
 @app.route("/editar_productos", methods=["GET", "POST"])
 def editar_productos():
     # Cargar los productos desde el archivo JSON
-    productos_path = "app/productos.json"
+    productos_path = "productos.json"
     with open(productos_path, "r") as f:
         productos = json.load(f)
 
@@ -39,7 +39,7 @@ def editar_productos():
 
 @app.route("/productos/api", methods=["GET"])
 def obtener_productos():
-    with open("app/productos.json", "r") as file:
+    with open("productos.json", "r") as file:
         productos = json.load(file)
     return jsonify(productos)
 
@@ -55,7 +55,7 @@ def guardar_productos():
             return jsonify({"error": "Formato de datos inválido. Se esperaba una lista."}), 400
         
         # Guardar los datos en el archivo JSON
-        with open("app/productos.json", "w") as file:
+        with open("productos.json", "w") as file:
             json.dump(nuevos_productos, file, ensure_ascii=False, indent=4)
         
         return jsonify({"message": "Productos guardados exitosamente."}), 200
@@ -115,4 +115,4 @@ def download(cliente, fecha, html_content):
     return response
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)
