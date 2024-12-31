@@ -14,7 +14,6 @@ Esta es una aplicación web para una tienda local que permite crear recibos pers
 - **Flask**: Framework web para la API backend.
 - **Gunicorn**: Servidor WSGI para ejecutar la app Flask en producción.
 - **Render**: Plataforma de despliegue para alojar la aplicación.
-- **ReportLab**: Librería de Python para generar PDFs de recibos.
 
 ## Instalación
 
@@ -32,12 +31,12 @@ Esta es una aplicación web para una tienda local que permite crear recibos pers
 
 2. Crea un entorno virtual:
    ```bash
-     python3 -m venv venv
-     source venv/bin/activate  # En Windows usa `venv\Scripts\activate
+   python3 -m venv venv
+   source venv/bin/activate  # En Windows usa `venv\Scripts\activate
 
 4. Instala dependencias
    ```bash
-     pip install -r requirements.txt
+   pip install -r requirements.txt
 
 5. Ejecuta mediante python
    ```bash
