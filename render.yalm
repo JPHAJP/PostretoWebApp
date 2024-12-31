@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: flask-app
+    env: python
+    buildCommand: |
+      apt-get update && apt-get install -y \
+        libpango-1.0-0 \
+        libharfbuzz0b \
+        libpangoft2-1.0-0 \
+        libffi-dev \
+        libjpeg-dev \
+        libopenjp2-7-dev \
+        libcairo2 \
+        libpangocairo-1.0-0
+      pip install -r requirements.txt
+    startCommand: gunicorn app:app --timeout 120
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11

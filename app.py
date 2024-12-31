@@ -1,9 +1,23 @@
 from flask import Flask, render_template, request, redirect, url_for, make_response, jsonify
 from weasyprint import HTML
 import os, json
+from urllib.parse import urlparse
 
 app = Flask(__name__)
 app.jinja_env.globals.update(enumerate=enumerate)
+
+# Add this custom URL fetcher function after your imports
+def custom_fetcher(url):
+    parsed = urlparse(url)
+    if parsed.netloc == 'postretowebapp.onrender.com':
+        # Convert the URL path to a local file path
+        local_path = os.path.join(
+            app.static_folder, 
+            parsed.path.lstrip('/static/')
+        )
+        if os.path.isfile(local_path):
+            with open(local_path, 'rb') as f:
+                return {'string': f.read()}
 
 # Ruta para servir el archivo productos.json
 @app.route("/productos")
@@ -101,18 +115,25 @@ def recibo():
 # Ruta para descargar el recibo como PDF
 @app.route("/download", methods=["POST"])
 def download(cliente, fecha, html_content):
-    # Generar el nombre del archivo PDF
-    nombre_archivo = f"Recibo entrega - {cliente} - {fecha}.pdf"
+    try:
+        nombre_archivo = f"Recibo entrega - {cliente} - {fecha}.pdf"
+        
+        # Create the PDF with the correct base URL
+        pdf = HTML(
+            string=html_content,
+            base_url=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
+        ).write_pdf()
 
-    # Generar el PDF a partir del contenido HTML
-    pdf = HTML(string=html_content, base_url='https://postretowebapp.onrender.com').write_pdf()
+        response = make_response(pdf)
+        response.headers["Content-Type"] = "application/pdf"
+        response.headers["Content-Disposition"] = f"attachment; filename={nombre_archivo}"
 
-    # Preparar la respuesta con el PDF
-    response = make_response(pdf)
-    response.headers["Content-Type"] = "application/pdf"
-    response.headers["Content-Disposition"] = f"attachment; filename={nombre_archivo}"
-
-    return response
+        return response
+    except Exception as e:
+        print(f"PDF Generation Error: {str(e)}")  # For debugging
+        return str(e), 500
 
 if __name__ == "__main__":
+    # Configure static folder explicitly
+    app.static_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
     app.run(host='0.0.0.0', port=5000, debug=False)

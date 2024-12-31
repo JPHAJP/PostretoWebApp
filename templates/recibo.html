@@ -1,34 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recibo</title>
-    <!-- <link rel="stylesheet" href="/static/css/styles.css"> -->
-    <link rel="icon" href="static\css\logo_grande.png" type="image/png">
+    <link rel="icon" href="{{ url_for('static', filename='css/logo_grande.png') }}" type="image/png">
     <style>
-        /* Aplicando la fuente Dancing Script */
         @font-face {
             font-family: "Script-MAIN";
-            /* Nombre de la fuente */
-            src: url('static/css/Script.ttf') format('truetype');
-            /* Ruta al archivo .ttf */
+            src: url('{{ url_for("static", filename="css/Script.ttf") }}') format('truetype');
             font-weight: normal;
-            /* Peso de la fuente */
             font-style: normal;
-            /* Estilo de la fuente */
         }
 
         @font-face {
             font-family: "Script";
-            /* Nombre de la fuente */
-            src: url('static/css/dreaming-script.otf') format('opentype');
-            /* Ruta al archivo .ttf */
+            src: url('{{ url_for("static", filename="css/dreaming-script.otf") }}') format('opentype');
             font-weight: normal;
-            /* Peso de la fuente */
             font-style: normal;
-            /* Estilo de la fuente */
         }
 
         body {
@@ -131,7 +120,7 @@
             top: 10%;
             width: 100%;
             height: 100%;
-            background-image: url('/static/css/logo_grande.png');
+            background-image: url('{{ url_for("static", filename="css/logo_grande.png") }}');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
