@@ -105,7 +105,7 @@ def download(cliente, fecha, html_content):
     nombre_archivo = f"Recibo entrega - {cliente} - {fecha}.pdf"
 
     # Generar el PDF a partir del contenido HTML
-    pdf = HTML(string=html_content, base_url='https://postretowebapp.onrender.com/').write_pdf()
+    pdf = HTML(string=html_content, base_url='https://postretowebapp.onrender.com').write_pdf()
 
     # Preparar la respuesta con el PDF
     response = make_response(pdf)
