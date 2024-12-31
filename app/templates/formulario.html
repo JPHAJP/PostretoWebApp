@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar Recibo</title>
+    <style>
+        /* Fondo y colores generales */
+        body {
+            background-color: #f7f2e7; /* Fondo beige claro */
+            color: #5a4630; /* Texto en café oscuro */
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+    
+        /* Estilizar encabezado */
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #8b5e3c;
+        }
+    
+        /* Formulario */
+        form {
+            background-color: #ffffff; /* Fondo blanco para el formulario */
+            border: 1px solid #d9c2aa; /* Borde en tono café claro */
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    
+        /* Etiquetas */
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+    
+        /* Campos de entrada */
+        input, select {
+            width: 92%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #d9c2aa;
+            border-radius: 4px;
+            background-color: #fdf8f3;
+        }
+    
+        input:focus, select:focus {
+            border-color: #8b5e3c;
+            outline: none;
+            box-shadow: 0 0 5px rgba(139, 94, 60, 0.5);
+        }
+    
+        /* Botón de envío */
+        button[type="submit"] {
+            background-color: #8b5e3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+    
+        button[type="submit"]:hover {
+            background-color: #6f4b2a;
+        }
+    
+        /* Fieldset y legend */
+        fieldset {
+            border: 1px solid #d9c2aa;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #f3e8db;
+            margin-bottom: 15px;
+        }
+    
+        legend {
+            font-size: 1.1em;
+            color: #5a4630;
+        }
+    </style>
+</head>
+<body>
+    <h1>Formulario para Generar Recibos</h1>
+    <form method="POST" action="/recibo">
+        <label for="cliente">Nombre del Cliente:</label>
+        <input type="text" id="cliente" name="cliente" required>
+        <br><br>
+
+        <label for="num_productos">Número de productos:</label>
+        <input type="number" id="num_productos" name="num_productos" min="1" max="5" required>
+        <br><br>
+
+        <div id="productos-container"></div>
+
+        <label for="anticipo">Anticipo:</label>
+        <input type="number" id="anticipo" name="anticipo" min="0" required>
+        <br><br>
+
+        <label for="fecha">Fecha de Entrega:</label>
+        <input type="date" id="fecha" name="fecha" required>
+        <br><br>
+
+        <button type="submit">Generar Recibo</button>
+    </form>
+
+    <script>
+        // Cargar productos desde el archivo JSON
+        fetch("/productos")
+            .then(response => response.json())
+            .then(productos => {
+                document.getElementById("num_productos").addEventListener("input", function() {
+                    const num = parseInt(this.value) || 0;
+                    const container = document.getElementById("productos-container");
+                    container.innerHTML = ""; // Limpia los campos previos
+
+                    for (let i = 0; i < num; i++) {
+                        // Generar el select de productos con sus presentaciones
+                        let selectOptions = productos.map(p => {
+                            let presentacionesOptions = p.presentaciones.map(presentacion => 
+                                `<option value="${presentacion.precio_unitario}" data-nombre="${p.nombre}" data-presentacion="${presentacion.nombre}">${presentacion.nombre} - $${presentacion.precio_unitario}</option>`
+                            ).join('');
+                            return `<optgroup label="${p.nombre}">${presentacionesOptions}</optgroup>`;
+                        }).join('');
+                        
+                        container.innerHTML += `
+                            <fieldset>
+                                <legend>Producto ${i + 1}</legend>
+                                <label>Seleccionar Producto:</label>
+                                <select name="producto_${i}_selector" required onchange="setPrecioUnitario(this, ${i})">
+                                    <option value="">Seleccione un producto</option>
+                                    ${selectOptions}
+                                </select>
+                                <br>
+                                <label>Producto:</label>
+                                <input type="text" name="producto_${i}_nombre" readonly required>
+                                <br>
+                                <label>Presentación:</label>
+                                <input type="text" name="producto_${i}_presentacion" readonly required>
+                                <br>
+                                <label>Cantidad:</label>
+                                <input type="number" name="producto_${i}_cantidad" min="1" required>
+                                <br>
+                                <label>Precio Unitario:</label>
+                                <input type="number" name="producto_${i}_precio_unitario" step="0.01" min="0" readonly required>
+                            </fieldset>
+                            <br>
+                        `;
+                    }
+                });
+            });
+
+        // Esta función es llamada cuando se selecciona un producto del selector
+        function setPrecioUnitario(selectElement, index) {
+            const selectedOption = selectElement.selectedOptions[0];
+            const precioUnitario = selectedOption.getAttribute("value");
+            const presentacion = selectedOption.getAttribute("data-presentacion");
+            const productoNombre = selectedOption.getAttribute("data-nombre");
+
+            // Actualiza los campos con los datos seleccionados
+            document.querySelector(`input[name="producto_${index}_nombre"]`).value = productoNombre;
+            document.querySelector(`input[name="producto_${index}_presentacion"]`).value = presentacion;
+            document.querySelector(`input[name="producto_${index}_precio_unitario"]`).value = precioUnitario;
+
+            // Cambiar el texto de la opción seleccionada al formato "Producto - Presentación"
+            selectElement.options[selectElement.selectedIndex].text = `${productoNombre} - ${presentacion}`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+[
+    {
+        "nombre": "Galletos",
+        "presentaciones": [
+            {
+                "nombre": "1 Kg",
+                "precio_unitario": 480
+            },
+            {
+                "nombre": "1/2 Kg",
+                "precio_unitario": 240
+            },
+            {
+                "nombre": "1/4 Kg",
+                "precio_unitario": 120
+            },
+            {
+                "nombre": "mini 1/8 Kg",
+                "precio_unitario": 60
+            }
+        ]
+    },
+    {
+        "nombre": "Galletas Surtidas",
+        "presentaciones": [
+            {
+                "nombre": "1 Kg",
+                "precio_unitario": 480
+            },
+            {
+                "nombre": "1/2 Kg",
+                "precio_unitario": 240
+            },
+            {
+                "nombre": "1/4 Kg",
+                "precio_unitario": 120
+            },
+            {
+                "nombre": "mini 1/8 Kg",
+                "precio_unitario": 60
+            }
+        ]
+    },
+    {
+        "nombre": "Pastel Chocolate",
+        "presentaciones": [
+            {
+                "nombre": "20 Personas",
+                "precio_unitario": 15.75
+            },
+            {
+                "nombre": "15 Personas",
+                "precio_unitario": 15.75
+            },
+            {
+                "nombre": "12 Pesonas",
+                "precio_unitario": 17.25
+            }
+        ]
+    },
+    {
+        "nombre": "Tarta Manzana",
+        "presentaciones": [
+            {
+                "nombre": "20 Personas",
+                "precio_unitario": 15.75
+            },
+            {
+                "nombre": "15 Personas",
+                "precio_unitario": 15.75
+            },
+            {
+                "nombre": "12 Pesonas",
+                "precio_unitario": 17.25
+            }
+        ]
+    },
+    {
+        "nombre": "Cheesecake",
+        "presentaciones": [
+            {
+                "nombre": "20 Personas",
+                "precio_unitario": 15.75
+            },
+            {
+                "nombre": "15 Personas",
+                "precio_unitario": 15.75
+            },
+            {
+                "nombre": "12 Pesonas",
+                "precio_unitario": 17.25
+            }
+        ]
+    },
+    {
+        "nombre": "Panque de platano",
+        "presentaciones": [
+            {
+                "nombre": "20 Personas",
+                "precio_unitario": 800
+            },
+            {
+                "nombre": "15 Personas",
+                "precio_unitario": 540
+            },
+            {
+                "nombre": "12 Pesonas",
+                "precio_unitario": 500
+            },
+            {
+                "nombre": "5 Personas",
+                "precio_unitario": 200
+            }
+        ]
+    },
+    {
+        "nombre": "Gelato",
+        "presentaciones": [
+            {
+                "nombre": "12 Personas ",
+                "precio_unitario": 720
+            }
+        ]
+    }
+]

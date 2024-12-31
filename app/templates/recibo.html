@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recibo</title>
+    <!-- <link rel="stylesheet" href="/static/css/styles.css"> -->
+    <style>
+        /* Aplicando la fuente Dancing Script */
+        @font-face {
+            font-family: "Script-MAIN";
+            /* Nombre de la fuente */
+            src: url('file:///C:/Users/jpha/Documents/postretowebapp/app/static/css/Script.ttf') format('truetype');
+            /* Ruta al archivo .ttf */
+            font-weight: normal;
+            /* Peso de la fuente */
+            font-style: normal;
+            /* Estilo de la fuente */
+        }
+
+        @font-face {
+            font-family: "Script";
+            /* Nombre de la fuente */
+            src: url('file:///C:/Users/jpha/Documents/postretowebapp/app/static/css/dreaming-script.otf') format('opentype');
+            /* Ruta al archivo .ttf */
+            font-weight: normal;
+            /* Peso de la fuente */
+            font-style: normal;
+            /* Estilo de la fuente */
+        }
+
+        body {
+            font-family: "Script", sans-serif;
+            /* Aplica la fuente personalizada */
+            font-size: 18px;
+        }
+
+
+        h1 {
+            font-family: "Script-MAIN", sans-serif;
+            text-align: center;
+            font-size: 150px;
+            font-weight: lighter;
+            color: #000000;
+            margin-bottom: -30px;
+            /* margin-top: -20px; */
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 30px;
+            color: #333;
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 80%;
+            /* Ajusta el ancho de la tabla según tus necesidades */
+            background: rgba(255, 255, 255, 0.8);
+            /* Fondo blanco con algo de transparencia */
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+        }
+
+        th,
+        td {
+            padding: 15px 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #ebdaca;
+            font-weight: bolder;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8dec6;
+        }
+
+        p {
+            text-align: center;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        /*etiquetas p con id*/
+        #right {
+            text-align: right;
+            margin-right: 10%;
+        }
+
+        #pago {
+            font-size: 30px;
+            font-weight: bolder;
+
+        }
+
+        form {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #ddc4ac;
+            color: #ddc4ac;
+            border: none;
+            /* padding: 10px 20px; */
+            cursor: pointer;
+            font-size: 10px;
+            border-radius: 1px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #daa569;
+        }
+
+        /* Estilo para la marca de agua */
+        body {
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 10%;
+            width: 100%;
+            height: 100%;
+            background-image: url('file:///C:/Users/jpha/Documents/postretowebapp/app/static/css/logo_grande.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: .15;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Postreto</h1>
+    <h2>Recibo de entrega</h2>
+    <p><strong>Cliente:</strong> {{ cliente }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Fecha de
+            entrega:</strong> {{ fecha }}</p>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Producto</th>
+                <th>Presentación</th>
+                <th>Cantidad</th>
+                <th>P / U</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i, producto in enumerate(productos) %}
+            <tr>
+                <td>{{ i + 1 }}</td>
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.presentacion }}</td>
+                <td>{{ producto.cantidad }}</td>
+                <td>{{ producto.precio_unitario }}</td>
+                <td>{{ producto.cantidad * producto.precio_unitario }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p id="right"><strong>Total:</strong> ${{ total }}</p>
+    <p id="right"><strong>Anticipo:</strong> ${{ anticipo }}</p>
+    <p id="pago"><br><strong>Total a pagar contra entrega:</strong> ${{ restante }}</p>
+    <p style="font-size: 20px;"><br>Los productos fueron entregados en buen estado. ▢</p>
+    <form action="/download" method="POST">
+        <input type="hidden" name="cliente" value="{{ cliente }}">
+        <input type="hidden" name="fecha" value="{{ fecha }}">
+        <input type="hidden" name="html_content" value="{{ recibo_content }}">
+        <!-- <button type="submit">.</button> -->
+    </form>
+</body>
+
+</html>
