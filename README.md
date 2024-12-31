@@ -25,19 +25,20 @@ Esta es una aplicación web para una tienda local que permite crear recibos pers
 
 ### Pasos para instalar localmente:
 
-1. Clona este repositorio:
-
+1. Clona este repositorio
    ```bash
    git clone https://github.com/JPHAJP/PostretoWebApp.git
    cd /PostretoWebApp
 
 2. Crea un entorno virtual:
-  ```bash
-  python3 -m venv venv
-  source venv/bin/activate  # En Windows usa `venv\Scripts\activate`
+   ```bash
+     python3 -m venv venv
+     source venv/bin/activate  # En Windows usa `venv\Scripts\activate
 
-3. Instala dependencias
-  pip install -r requirements.txt
+4. Instala dependencias
+   ```bash
+     pip install -r requirements.txt
 
-4. Ejecuta mediante python
+5. Ejecuta mediante python
+   ```bash
    python3 app/app.py
